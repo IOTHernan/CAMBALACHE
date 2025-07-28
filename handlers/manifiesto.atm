@@ -1,0 +1,5 @@
+# CAMBALACHE :: Bootstrapping inicial
+
+set << perfil_operativo_lian.md
+inject_env 'modo_operativo := rebelde'
+run_handler 'iniciar_resistencia'

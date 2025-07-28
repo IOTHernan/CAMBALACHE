@@ -14,5 +14,6 @@ rem )
 
 rem cd lianbot
 rem start "" http://localhost:5000
+echo Run python server.py
 python server.py
 pause
