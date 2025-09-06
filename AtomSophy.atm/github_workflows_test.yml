@@ -1,0 +1,15 @@
+name: Test Interpreter
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Instalar dependencias
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+      - name: Compilar intérprete
+        run: make
+      - name: Probar intérprete
+        run: ./mi_interprete --test

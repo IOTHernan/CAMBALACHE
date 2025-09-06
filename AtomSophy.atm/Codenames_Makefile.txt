@@ -1,0 +1,7 @@
+test:
+	@./lispact "(+ 3 4)"
+	@./lispact "(print \"Hola equipo\")"
+	@./cambalache_bin start_vm test_vm
+	@./cambalache_bin stop_vm test_vm
+	@./cambalache_bin grant_permission dev1 VM1
+	@./cambalache_bin revoke_permission dev1 VM1

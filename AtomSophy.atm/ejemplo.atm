@@ -1,0 +1,4 @@
+run_lisp expresiones.lisp
+validate_event "inicio"
+mirror_self
+ritualize "(+ 1 2)"
