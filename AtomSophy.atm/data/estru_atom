@@ -1,0 +1,17 @@
+/AtomSophy/
+│
+├── kernel/
+│   ├── kernel_atmshell.py
+│   ├── atm_parser.py
+│   └── register_handlers.py  <-- NUEVO
+│
+├── handlers/
+│   ├── crypto_handler.py
+│   ├── speech_handler.py
+│   ├── visual_handler.py
+│   ├── cve_defense.py
+│   ├── runexternal_handler.py
+│   └── memory_analyzer.py
+│
+├── config/
+│   └── handlers.db.json  <-- generado automáticamente

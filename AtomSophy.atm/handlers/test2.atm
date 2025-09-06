@@ -1,0 +1,15 @@
+set target 192.168.1.1
+echo("Escaneando $target...")
+env
+help
+# Redirige salida a archivo
+echo("Inicio del sistema") >> logs/startup.log
+
+# Lee targets desde archivo
+nmap << targets.txt
+
+# Append a log
+scanhost($host) >>> logs/hosts_scanned.txt
+
+# Entrada literal como heredoc
+alert <<< "Intrusión detectada en $host"

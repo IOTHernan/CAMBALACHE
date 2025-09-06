@@ -1,0 +1,49 @@
+H:\atomsophy\
+├── core\                     # Código central y funciones principales
+│   ├── __init__.py           # Inicializador del módulo
+│   ├── main.py               # Punto de entrada principal
+│   ├── autogen_code\         # Código dinámico (virus auto generativo, etc.)
+│   │   ├── generator.py      # Generador de código dinámico
+│   │   ├── templates\        # Plantillas para generar código
+│   │   │   └── *.template    # Archivos base
+│   │   └── logic\            # Reglas y lógica del código autogenerativo
+│   │       └── *.py
+│   ├── roles_ia\             # Roles específicos de IA
+│   │   ├── role_manager.py   # Manejo y asignación de roles
+│   │   ├── roles\            # Implementación de roles
+│   │   │   ├── admin.py
+│   │   │   ├── military.py
+│   │   │   └── intelligence.py
+│   │   └── tests\            # Pruebas unitarias para roles
+│   │       └── test_roles.py
+│   └── utils\                # Utilidades generales del sistema
+│       └── *.py
+├── multimedia\               # Gestión multimedia
+│   ├── military\             # Divisiones para uso militar
+│   │   ├── audio\
+│   │   ├── video\
+│   │   └── docs\
+│   └── civilian\             # Uso civil (si es aplicable)
+│       ├── audio\
+│       ├── video\
+│       └── docs\
+├── data\                     # Almacenamiento de datos y configuraciones
+│   ├── config.json           # Configuración general
+│   ├── databases\            # Bases de datos locales
+│   │   └── *.sqlite3
+│   └── temp\                 # Archivos temporales
+├── packages\                 # Paquetes generados o integrados
+│   ├── installers\           # Fabricación de instaladores
+│   ├── libraries\            # Librerías personalizadas o externas
+│   └── tools\                # Herramientas de soporte
+├── tests\                    # Pruebas y QA
+│   ├── core_tests.py
+│   ├── multimedia_tests.py
+│   └── performance_tests.py
+├── logs\                     # Archivos de log del sistema
+│   ├── activity.log          # Registro de actividades
+│   └── errors.log            # Registro de errores
+└── docs\                     # Documentación del proyecto
+    ├── README.md             # Descripción general
+    ├── INSTALL.md            # Guía de instalación
+    └── USAGE.md              # Manual de usuario

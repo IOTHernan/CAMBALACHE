@@ -1,0 +1,182 @@
+Claro, puedo proporcionarte un ejemplo de estructura y código para comenzar con una IA que analice texto, PDFs, etc. Este ejemplo se centrará en el análisis de texto y se puede extender para PDFs utilizando bibliotecas adicionales.
+
+**1. Estructura del proyecto:**
+
+```
+proyecto_analisis_texto/
+├── data/              # Datos de entrenamiento y prueba
+│   ├── train.txt
+│   └── test.txt
+├── models/            # Modelos entrenados
+│   └── modelo_entrenado.pkl
+├── scripts/           # Scripts de preprocesamiento, entrenamiento y evaluación
+│   ├── preprocesamiento.py
+│   ├── entrenamiento.py
+│   └── evaluacion.py
+├── utils/             # Funciones utilitarias
+│   └── helpers.py
+├── requirements.txt   # Dependencias del proyecto
+└── main.py            # Script principal para ejecutar el análisis
+```
+
+**2. Dependencias (requirements.txt):**
+
+```
+nltk
+scikit-learn
+pandas
+PyPDF2  # Para procesar PDFs (opcional)
+tika #Alternativa para procesar PDFs y otros formatos (opcional)
+```
+
+Instala las dependencias con: `pip install -r requirements.txt`
+
+**3. Código de ejemplo (Python):**
+
+**a) utils/helpers.py:**
+
+```python
+import nltk
+import re
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+def preprocesar_texto(texto):
+    texto = texto.lower()
+    texto = re.sub(r'[^\w\s]', '', texto)  # Eliminar puntuación
+    tokens = texto.split()
+    stop_words = set(stopwords.words('spanish'))  # Usar stopwords en español
+    tokens = [token for token in tokens if token not in stop_words]
+    lemmatizer = WordNetLemmatizer()
+    tokens = [lemmatizer.lemmatize(token) for token in tokens]
+    return " ".join(tokens)
+
+def cargar_datos(ruta):
+    with open(ruta, 'r', encoding='utf-8') as archivo:
+        textos = archivo.readlines()
+    return textos
+```
+
+**b) scripts/preprocesamiento.py:**
+
+```python
+from utils.helpers import preprocesar_texto, cargar_datos
+import pandas as pd
+
+def preprocesar_datos(ruta_entrada, ruta_salida):
+    textos_crudos = cargar_datos(ruta_entrada)
+    textos_procesados = [preprocesar_texto(texto) for texto in textos_crudos]
+    df = pd.DataFrame({'texto': textos_procesados})
+    df.to_csv(ruta_salida, index=False, encoding='utf-8')
+
+if __name__ == "__main__":
+    preprocesar_datos('data/train.txt', 'data/train_procesado.csv')
+    preprocesar_datos('data/test.txt', 'data/test_procesado.csv')
+```
+
+**c) scripts/entrenamiento.py:**
+
+```python
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+import pickle
+
+def entrenar_modelo(ruta_datos, ruta_modelo):
+    df = pd.read_csv(ruta_datos, encoding='utf-8')
+    vectorizer = TfidfVectorizer()
+    X = vectorizer.fit_transform(df['texto'])
+    y = [0] * len(df) # Ejemplo: todas las etiquetas son 0. DEBES CAMBIAR ESTO
+    modelo = MultinomialNB()
+    modelo.fit(X, y)
+
+    with open(ruta_modelo, 'wb') as archivo:
+        pickle.dump((vectorizer, modelo), archivo)
+
+if __name__ == "__main__":
+    entrenar_modelo('data/train_procesado.csv', 'models/modelo_entrenado.pkl')
+```
+
+**d) scripts/evaluacion.py:**
+
+```python
+import pandas as pd
+import pickle
+from sklearn.metrics import classification_report
+
+def evaluar_modelo(ruta_datos, ruta_modelo):
+    df = pd.read_csv(ruta_datos, encoding='utf-8')
+    with open(ruta_modelo, 'rb') as archivo:
+        vectorizer, modelo = pickle.load(archivo)
+    X = vectorizer.transform(df['texto'])
+    y_true = [0] * len(df) # Ejemplo: todas las etiquetas son 0. DEBES CAMBIAR ESTO
+    y_pred = modelo.predict(X)
+    print(classification_report(y_true, y_pred))
+
+if __name__ == "__main__":
+    evaluar_modelo('data/test_procesado.csv', 'models/modelo_entrenado.pkl')
+```
+
+**e) main.py:**
+
+```python
+import subprocess
+
+def ejecutar_script(script):
+    subprocess.run(['python', script], check=True)
+
+if __name__ == "__main__":
+    ejecutar_script('scripts/preprocesamiento.py')
+    ejecutar_script('scripts/entrenamiento.py')
+    ejecutar_script('scripts/evaluacion.py')
+
+```
+
+**4. Análisis de PDFs (con PyPDF2 o Tika):**
+
+Para procesar PDFs, puedes usar la biblioteca `PyPDF2` o `tika`. Aquí te doy un ejemplo con `PyPDF2`:
+
+```python
+import PyPDF2
+
+def extraer_texto_pdf(ruta_pdf):
+    texto = ""
+    with open(ruta_pdf, 'rb') as archivo_pdf:
+        lector_pdf = PyPDF2.PdfReader(archivo_pdf)
+        for pagina in lector_pdf.pages:
+            texto += pagina.extract_text()
+    return texto
+
+# Ejemplo de uso:
+texto_pdf = extraer_texto_pdf('ruta/al/archivo.pdf')
+texto_procesado = preprocesar_texto(texto_pdf)
+print(texto_procesado)
+
+```
+
+Con `tika`:
+
+```python
+from tika import parser
+
+def extraer_texto_tika(ruta_archivo):
+    parsed = parser.from_file(ruta_archivo)
+    return parsed["content"]
+
+texto_archivo = extraer_texto_tika('ruta/al/archivo.pdf') #Tambien funciona con otros formatos como .docx
+texto_procesado = preprocesar_texto(texto_archivo)
+print(texto_procesado)
+```
+
+**Puntos importantes:**
+
+*   **Etiquetado de datos:** El ejemplo asume una tarea de clasificación donde todas las etiquetas son 0. Debes modificar esto para tu tarea específica, etiquetando tus datos de entrenamiento correctamente.
+*   **Modelo:** Se utiliza un modelo Naive Bayes Multinomial, pero puedes experimentar con otros modelos como SVM, Random Forest o redes neuronales, dependiendo de la complejidad de tu tarea.
+*   **Vectorización:** Se utiliza TF-IDF para convertir el texto en números. Otras opciones son CountVectorizer o Word Embeddings (Word2Vec, GloVe, FastText).
+*   **Mejora del preprocesamiento:** Puedes añadir otras técnicas de preprocesamiento como stemming, corrección ortográfica o manejo de emojis.
+*   **Extensión a otros formatos:** Para otros formatos como docx, puedes usar bibliotecas como `python-docx`.
+
+Este ejemplo te proporciona una base sólida para comenzar. Recuerda adaptarlo a tus necesidades específicas y experimentar con diferentes técnicas y modelos para obtener los mejores resultados.
