@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QComboBox
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QComboBox, QVBoxLayout
 from PyQt5.QtCore import Qt, QTimer
 import pyttsx3
 
@@ -17,21 +17,25 @@ class Bot3DWindow(QWidget):
 
     def initUI(self):
         self.setWindowTitle('AtomSophy Bot 3D')
-        self.setGeometry(100, 100, 400, 350)
-        
+        self.resize(400, 250)
+
+        layout = QVBoxLayout()
+
         self.label = QLabel(f'Model 3D: {self.modelo_path}', self)
-        self.label.setGeometry(50, 50, 300, 100)
-        self.label.setStyleSheet("background-color: lightgray; border: 1px solid black;")
+        self.label.setStyleSheet("background-color: lightgray; border: 1px solid black; padding: 20px; min-height: 100px;")
         self.label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.label)
 
         self.combo_gestures = QComboBox(self)
-        self.combo_gestures.setGeometry(50, 170, 300, 30)
         self.combo_gestures.addItems(list(self.gestures.keys()))
+        layout.addWidget(self.combo_gestures)
 
         self.btn_animar = QPushButton('Perform Gesture', self)
-        self.btn_animar.setGeometry(150, 220, 100, 40)
         self.btn_animar.clicked.connect(self.perform_gesture)
+        layout.addWidget(self.btn_animar)
 
+        self.setLayout(layout)
+        
     # Window drag handlers
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
